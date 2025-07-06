@@ -12,3 +12,6 @@ authors = [
 dependencies = [
     "PyQt5"
 ]
+
+[project.scripts]
+qt_mvp = "qt_mvp.main:main"
