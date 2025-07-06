@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "business_mvp"
+version = "2025.0.0a1"
+authors = [
+    {name = "Artin Zarei", email = "artin.zareie@yahoo.com"},
+    {name = "Mohammad Mohsen Mirzaei"}
+]
+dependencies = [
+    "PyQt5"
+]
