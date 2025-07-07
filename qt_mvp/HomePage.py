@@ -12,6 +12,10 @@ from PyQt5.QtWidgets import (
     QStackedWidget,
 )
 
+from BasePage import BasePage
+from MBA import MBA
+from SeasonalTrendAnalysis import SeasonalTrendAnalysis
+
 import sys
 
 SIDEBAR_STYLESHIT = """
@@ -26,10 +30,8 @@ QListWidget::item {
 """
 
 SIDEBAR_MENU_ITEMS = [
-    ("Market Basket Analysis", "market_basket"),
-    ("Seasonal Trend Analysis", "seasonal_trend"),
-    ("Dashboard", "dashboard"),
-    ("Reports", "reports"),
+    ("Market Basket Analysis", "market_basket", MBA),
+    ("Seasonal Trend Analysis", "seasonal_trend", SeasonalTrendAnalysis),
 ]
 
 
@@ -58,9 +60,9 @@ class HomePage(QMainWindow):
 
         self.menu_items = SIDEBAR_MENU_ITEMS
 
-        for text, icon in self.menu_items:
+        for text, icon_name, _ in self.menu_items:
             item = QListWidgetItem(text)
-            item.setData(Qt.UserRole, icon)
+            item.setData(Qt.UserRole, icon_name)
             self.sidebar.addItem(item)
 
         self.sidebar.currentRowChanged.connect(self._change_page)
@@ -70,44 +72,13 @@ class HomePage(QMainWindow):
 
         self.pages = {}
 
-        market_basket_page = QWidget()
-        market_basket_layout = QVBoxLayout()
-        market_basket_layout.addWidget(QLabel("<h1>Market Basket Analysis</h1>"))
-        market_basket_layout.addWidget(
-            QLabel("This page will contain market basket analysis tools.")
-        )
-        market_basket_page.setLayout(market_basket_layout)
-        self.pages["market_basket"] = market_basket_page
+        for _, icon_name, page in SIDEBAR_MENU_ITEMS:
+            page = page()
+            self.pages[icon_name] = page
+            self.main_content.addWidget(page)
 
-        seasonal_trend_page = QWidget()
-        seasonal_trend_layout = QVBoxLayout()
-        seasonal_trend_layout.addWidget(QLabel("<h1>Seasonal Trend Analysis</h1>"))
-        seasonal_trend_layout.addWidget(
-            QLabel("This page will contain seasonal trend analysis tools.")
-        )
-        seasonal_trend_page.setLayout(seasonal_trend_layout)
-        self.pages["seasonal_trend"] = seasonal_trend_page
-
-        dashboard_page = QWidget()
-        dashboard_layout = QVBoxLayout()
-        dashboard_layout.addWidget(QLabel("<h1>Dashboard</h1>"))
-        dashboard_layout.addWidget(
-            QLabel("This is the main dashboard with key metrics.")
-        )
-        dashboard_page.setLayout(dashboard_layout)
-        self.pages["dashboard"] = dashboard_page
-
-        reports_page = QWidget()
-        reports_layout = QVBoxLayout()
-        reports_layout.addWidget(QLabel("<h1>Reports</h1>"))
-        reports_layout.addWidget(QLabel("This page will contain various reports."))
-        reports_page.setLayout(reports_layout)
-        self.pages["reports"] = reports_page
-
-        for page_name, page_widget in self.pages.items():
-            self.main_content.addWidget(page_widget)
-
-        self.sidebar.setCurrentRow(2)
+        self.sidebar.setCurrentRow(0)
+        self.main_content.setCurrentIndex(0)
 
     def _change_page(self, index):
         if 0 <= index < len(self.menu_items):
