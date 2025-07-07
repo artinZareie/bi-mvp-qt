@@ -4,6 +4,7 @@ from HomePage import *
 
 import sys
 
+
 # Entry point of the program
 def main():
     print("Willkommen")
@@ -11,9 +12,10 @@ def main():
     app = QApplication(sys.argv)
 
     main_window = HomePage()
-    main_window.show()
+    main_window.showMaximized()
 
     app.exec()
+
 
 if __name__ == "__main__":
     main()
